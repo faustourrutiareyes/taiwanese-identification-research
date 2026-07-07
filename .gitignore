@@ -1,5 +1,7 @@
 TaiwanPoliticalClassificationResearch_FaustoUrrutia.pdf
 
 .venv/
-
+.ipynb_checkpoints
 .ipynb_checkpoints/
+*-checkpoint.ipynb
+

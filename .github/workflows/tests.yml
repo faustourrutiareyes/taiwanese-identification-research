@@ -1,0 +1,45 @@
+name: Tests and reproducibility
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies from the lockfile
+        run: uv sync --locked
+
+      - name: Lint and format check
+        run: |
+          uv run ruff check src tests run_all.py
+          uv run ruff format --check src tests run_all.py
+
+      - name: Unit tests
+        run: uv run pytest -q
+
+      - name: Rebuild the deterministic tables and check they match the committed ones
+        run: |
+          uv run python -m src.build_sample
+          uv run python -m src.codebook
+          uv run python -m src.descriptives
+          uv run python -m src.covariate_blocks
+          uv run python -m src.robustness
+          git diff --exit-code -- docs/codebook.md output/logs \
+            output/tables/descriptives.md output/tables/covariate_blocks.md output/tables/robustness.md
+
+      - name: Smoke-test the model comparison
+        run: uv run python -m src.ml_models --fast

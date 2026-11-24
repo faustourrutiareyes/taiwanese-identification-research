@@ -155,7 +155,9 @@ def candidate_models(n_iter: int, cv, X_train, y_train) -> dict:
             cv,
         ),
         "CatBoost": search(
-            CatBoostClassifier(random_state=SEED, verbose=0, allow_writing_files=False, thread_count=1),
+            CatBoostClassifier(
+                random_state=SEED, verbose=0, allow_writing_files=False, thread_count=1
+            ),
             {
                 "iterations": [200, 400],
                 "learning_rate": loguniform(0.01, 0.3),
@@ -182,7 +184,9 @@ def grouped_permutation_importance(
             order = rng.permutation(len(X_test))
             shuffled[columns] = X_test[columns].to_numpy()[order]
             drops.append(baseline - roc_auc_score(y_test, model.predict_proba(shuffled)[:, 1]))
-        rows.append({"variable": VARIABLE_LABELS[variable], "auc_drop": np.mean(drops), "sd": np.std(drops)})
+        rows.append(
+            {"variable": VARIABLE_LABELS[variable], "auc_drop": np.mean(drops), "sd": np.std(drops)}
+        )
     return pd.DataFrame(rows).sort_values("auc_drop", ascending=False)
 
 

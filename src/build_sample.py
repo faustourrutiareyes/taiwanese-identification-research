@@ -41,6 +41,8 @@ def harmonize(raw: pd.DataFrame) -> pd.DataFrame:
     out["female"] = raw["gender"].str.startswith("女").astype(int)
 
     out["party"] = recode.apply_rules(raw["political_party"], recode.PARTY_RULES, "Other or none")
+    # "Leans blue/green" answers exist only in 2013 and 2014 (used in robustness checks).
+    out["leaner"] = raw["political_party"].str.contains("泛藍|泛綠", na=False).astype(int)
     out["identity"] = recode.apply_rules(
         raw["taiwanese_or_chinese"], recode.IDENTITY_RULES, "Other or no answer"
     )

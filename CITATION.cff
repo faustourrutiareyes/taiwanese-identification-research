@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "Identity versus Class in the Taiwanese Electorate: replication code"
+authors:
+  - family-names: "Urrutia Reyes"
+    given-names: "Fausto Donato"
+repository-code: "https://github.com/faustourrutiareyes/taiwanese-identification-research"
+date-released: 2026-11-24
+keywords:
+  - political economy
+  - national identity
+  - Taiwan
+  - Taiwan Social Change Survey

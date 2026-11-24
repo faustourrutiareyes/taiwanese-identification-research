@@ -23,6 +23,7 @@ Run from the repository root:  python -m src.covariate_blocks
 from __future__ import annotations
 
 import re
+import warnings
 
 import matplotlib
 
@@ -33,6 +34,7 @@ import pandas as pd
 import statsmodels.formula.api as smf
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.model_selection import StratifiedKFold
+from statsmodels.tools.sm_exceptions import ConvergenceWarning
 
 from src.config import FIGURE_DIR, N_FOLDS, SAMPLE_PATH, SEED, TABLE_DIR, ensure_output_dirs
 
@@ -115,7 +117,13 @@ def cross_validated_predictions(data: pd.DataFrame, terms: list[str]) -> np.ndar
     folds = StratifiedKFold(n_splits=N_FOLDS, shuffle=True, random_state=SEED)
     predictions = np.empty(len(data))
     for train_idx, test_idx in folds.split(data, data["dpp"]):
-        model = smf.logit(formula(terms), data=data.iloc[train_idx]).fit(disp=False)
+        with warnings.catch_warnings():
+            # In the small single-wave samples (robustness.py) a rare category can
+            # be perfectly separated within one training fold. The fit then stops
+            # at a large finite coefficient, which only affects that category's
+            # few test predictions. Full-sample fits are not affected.
+            warnings.simplefilter("ignore", ConvergenceWarning)
+            model = smf.logit(formula(terms), data=data.iloc[train_idx]).fit(disp=False)
         predictions[test_idx] = model.predict(data.iloc[test_idx])
     return predictions
 
@@ -180,7 +188,7 @@ def table_cells(effects: dict, fit: pd.DataFrame) -> list[tuple[str, list[str]]]
     rows.append(
         (
             f"Out-of-sample AUC ({N_FOLDS}-fold CV)",
-            [f"{m:.3f} ({s:.3f})" for m, s in zip(fit["cv_auc"], fit["cv_auc_sd"])],
+            [f"{m:.3f} ({s:.3f})" for m, s in zip(fit["cv_auc"], fit["cv_auc_sd"], strict=True)],
         )
     )
     return rows
@@ -200,7 +208,9 @@ def write_latex(rows: list[tuple[str, list[str]]]) -> None:
     ]
     for label, cells in rows:
         if label.startswith("__header__"):
-            lines.append(f"\\multicolumn{{{len(BLOCKS) + 1}}}{{l}}{{\\textit{{{label[10:]}}}}} \\\\")
+            lines.append(
+                f"\\multicolumn{{{len(BLOCKS) + 1}}}{{l}}{{\\textit{{{label[10:]}}}}} \\\\"
+            )
         elif label == "__rule__":
             lines.append("\\midrule")
         else:
@@ -239,7 +249,7 @@ def write_markdown(rows: list[tuple[str, list[str]]]) -> None:
 
 def plot_roc(data: pd.DataFrame, oof: dict, fit: pd.DataFrame) -> None:
     fig, ax = plt.subplots(figsize=(6, 5.5))
-    for (name, predictions), auc in zip(oof.items(), fit["cv_auc"]):
+    for (name, predictions), auc in zip(oof.items(), fit["cv_auc"], strict=True):
         fpr, tpr, _ = roc_curve(data["dpp"], predictions)
         ax.plot(fpr, tpr, linewidth=2, label=f"{name}  (AUC {auc:.3f})")
     ax.plot([0, 1], [0, 1], linestyle="--", color="grey", linewidth=1)

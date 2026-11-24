@@ -17,4 +17,18 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=9.2.0",
+    "ruff>=0.17.6",
 ]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+extend-exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+# The formatter enforces line length for code; long LaTeX note strings are left whole.
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

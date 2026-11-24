@@ -67,7 +67,13 @@ INDEPENDENCE_RULES: Rules = [
 ]
 
 # Vote in the January 2012 presidential election, asked in all three waves.
+# "Forgot whether I voted" (忘記有沒有去投票) and "refused to say whether I
+# voted" (拒答有沒有去投票) contain the phrase for "did not vote" (沒有去投票),
+# so non-answers are matched first.
+_NON_ANSWER = (r"忘記|拒答|不願意|不知道", "No answer")
+
 VOTE_2012_RULES: Rules = [
+    _NON_ANSWER,
     (r"蔡英文", "Tsai (DPP)"),
     (r"馬英九", "Ma (KMT)"),
     (r"宋楚瑜|投廢票|拒領", "Soong or blank"),
@@ -78,6 +84,7 @@ VOTE_2012_RULES: Rules = [
 # whether the respondent took a referendum ballot instead, so it is only
 # usable for 2012 and 2013 (see build_sample.py).
 VOTE_2008_RULES: Rules = [
+    _NON_ANSWER,
     (r"謝長廷", "Hsieh (DPP)"),
     (r"馬英九", "Ma (KMT)"),
     (r"投廢票|拒領", "Blank"),

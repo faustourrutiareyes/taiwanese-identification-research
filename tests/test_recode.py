@@ -55,7 +55,13 @@ def test_graduate_degree_is_not_coded_as_university():
 
 @pytest.mark.parametrize(
     ("raw", "expected"),
-    [("2-3萬元以下", 2.5), ("1萬元以下", 0.5), ("30萬元以上", 37.5), ("無收入", 0.0), ("沒有工作", 0.0)],
+    [
+        ("2-3萬元以下", 2.5),
+        ("1萬元以下", 0.5),
+        ("30萬元以上", 37.5),
+        ("無收入", 0.0),
+        ("沒有工作", 0.0),
+    ],
 )
 def test_income_midpoints(raw, expected):
     assert recode.income_midpoint(raw) == expected
@@ -73,3 +79,20 @@ def test_sample():
     partisans = sample[sample["partisan"] == 1]
     assert set(partisans["party"]) == {"DPP", "KMT"}
     assert len(partisans) == 1707
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("有,投給蔡英文", "Tsai (DPP)"),
+        ("馬英九(跳答f8)", "Ma (KMT)"),
+        ("沒有去投票(跳答95)", "Did not vote"),
+        ("當時未滿20歲(跳答h10)", "Did not vote"),
+        # "Forgot / refused whether I voted" contain the words for "did not vote".
+        ("忘記有沒有去投票", "No answer"),
+        ("拒答有沒有去投票", "No answer"),
+        ("有,但拒領總統選舉票", "Soong or blank"),
+    ],
+)
+def test_vote_2012_rules(raw, expected):
+    assert recode.apply_rules(pd.Series([raw]), recode.VOTE_2012_RULES, "No answer")[0] == expected

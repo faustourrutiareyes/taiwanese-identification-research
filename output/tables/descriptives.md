@@ -1,0 +1,29 @@
+| | DPP (n=722) | KMT (n=983) | Difference | p-value |
+| --- | ---: | ---: | ---: | ---: |
+| Age (years) | 45.58 | 49.01 | -3.429 | 0.000 |
+| Female (share) | 0.442 | 0.481 | -0.039 | 0.107 |
+| Personal income (NT$10k/month) | 3.113 | 3.236 | -0.123 | 0.516 |
+| Household income (NT$10k/month) | 8.972 | 8.994 | -0.023 | 0.969 |
+| *Education (share)* | | | | |
+| Primary or less | 0.194 | 0.158 | 0.036 | 0.054 |
+| Junior high | 0.123 | 0.104 | 0.020 | 0.213 |
+| Senior high | 0.247 | 0.263 | -0.017 | 0.427 |
+| Junior college | 0.107 | 0.169 | -0.062 | 0.000 |
+| University | 0.258 | 0.233 | 0.025 | 0.244 |
+| Graduate | 0.072 | 0.073 | -0.001 | 0.923 |
+| *National identity (share)* | | | | |
+| Taiwanese | 0.875 | 0.443 | 0.433 | 0.000 |
+| Both | 0.115 | 0.471 | -0.356 | 0.000 |
+| Chinese | 0.007 | 0.070 | -0.063 | 0.000 |
+| Other or no answer | 0.003 | 0.016 | -0.014 | 0.003 |
+| *Independence stance (share)* | | | | |
+| Independence | 0.515 | 0.159 | 0.357 | 0.000 |
+| Status quo | 0.382 | 0.527 | -0.145 | 0.000 |
+| Unification | 0.075 | 0.290 | -0.215 | 0.000 |
+| No answer | 0.028 | 0.024 | 0.003 | 0.676 |
+| *2012 presidential vote (share)* | | | | |
+| Tsai (DPP) | 0.771 | 0.017 | 0.754 | 0.000 |
+| Ma (KMT) | 0.032 | 0.837 | -0.805 | 0.000 |
+| Soong or blank | 0.024 | 0.021 | 0.002 | 0.765 |
+| Did not vote | 0.141 | 0.112 | 0.029 | 0.074 |
+| No answer | 0.032 | 0.012 | 0.020 | 0.008 |

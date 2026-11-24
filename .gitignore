@@ -5,3 +5,7 @@ TaiwanPoliticalClassificationResearch_FaustoUrrutia.pdf
 .ipynb_checkpoints/
 *-checkpoint.ipynb
 
+__pycache__/
+.pytest_cache/
+catboost_info/
+output/data/
